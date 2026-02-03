@@ -3,6 +3,15 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun --watch run src/index.ts",
+    "dev:hot": "bun --hot run src/index.ts",
+    "build": "bun build --target=bun --outdir=dist ./src/index.ts",
+    "build:prod": "bun build --target=bun --production --outdir=dist ./src/index.ts",
+    "start": "bun dist/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/bun": "latest",
