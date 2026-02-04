@@ -1,39 +1,35 @@
 import type { Application } from 'express';
 import express from 'express';
-import ConfigServer from './config/config';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import type { DataBase } from './db/database';
+import type { ServerConfig } from './config/config';
 
-export class Server extends ConfigServer {
-  private app: Application = express();
-  private port: number = this.env.PORT;
+export class Server {
+  private app: Application;
 
-  private constructor() {
-    super();
-    this.middlewares();
-    this.dbConnection();
-    this.routes();
+  constructor(
+    private config: ServerConfig,
+    private db: DataBase
+  ) {
+    this.app = express();
+
+    this.setMiddlewares();
+    this.SetRoutes();
   }
 
-  public static init(): Server {
-    return new this();
-  }
-
-  private middlewares() {
+  private setMiddlewares() {
     this.app.use(express.json());
     this.app.use(cors());
     this.app.use(cookieParser());
   }
 
-  private async dbConnection(): Promise<void> {
-    try {
-    } catch (error) {}
-  }
+  private SetRoutes() {}
 
-  private routes() {}
+  public async start() {
+    await this.db.connect();
 
-  public async listen() {
-    await this.app.listen(this.port);
-    console.log(`API on http://localhost:${this.port}`);
+    await this.app.listen(this.config.port);
+    console.log(`API on http://localhost:${this.config.port}`);
   }
 }
