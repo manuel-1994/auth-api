@@ -4,18 +4,20 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import type { DataBase } from './db/database';
 import type { ServerConfig } from './config/config';
+import type { MainRouter } from './routes';
 
 export class Server {
   private app: Application;
 
   constructor(
     private config: ServerConfig,
-    private db: DataBase
+    private db: DataBase,
+    private router: MainRouter
   ) {
     this.app = express();
 
     this.setMiddlewares();
-    this.SetRoutes();
+    this.setRoutes();
   }
 
   private setMiddlewares() {
@@ -24,7 +26,9 @@ export class Server {
     this.app.use(cookieParser());
   }
 
-  private SetRoutes() {}
+  private setRoutes() {
+    this.app.use('/api', this.router.init());
+  }
 
   public async start() {
     await this.db.connect();
