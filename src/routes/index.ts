@@ -1,13 +1,5 @@
-import { Router } from 'express';
+import { MainRouter } from './main.router';
+import { UserRouter } from './user.routes';
 
-export class MainRouter {
-  private router: Router = Router();
 
-  public init(): Array<Router> {
-    return [
-      this.router.get('/user', () => {
-        console.log('hola');
-      }),
-    ];
-  }
-}
+export { MainRouter, UserRouter };

@@ -2,7 +2,7 @@ import type { Application } from 'express';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import type { DataBase } from './db/database';
+import type { DataBase } from './config/database';
 import type { ServerConfig } from './config/config';
 import type { MainRouter } from './routes';
 
@@ -12,7 +12,7 @@ export class Server {
   constructor(
     private config: ServerConfig,
     private db: DataBase,
-    private router: MainRouter
+    private mainRouter: MainRouter
   ) {
     this.app = express();
 
@@ -27,7 +27,7 @@ export class Server {
   }
 
   private setRoutes() {
-    this.app.use('/api', this.router.init());
+    this.app.use('/api', this.mainRouter.router);
   }
 
   public async start() {

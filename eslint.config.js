@@ -8,7 +8,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        ecmaVersion: "latest",
+        ecmaVersion: 'latest',
         sourceType: 'module',
       },
     },

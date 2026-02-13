@@ -1,13 +1,17 @@
 import { ServerConfig } from './config/config';
-import { DataBase } from './db/database';
-import { MainRouter } from './routes';
+import { DataBase } from './config/database';
+import { MainRouter, UserRouter } from './routes';
 import { Server } from './Server';
 
 const config = new ServerConfig();
 
 const db = new DataBase(config.db);
 
-const router = new MainRouter();
+const userRouter = new UserRouter();
+
+const router = new MainRouter({
+  userRouter,
+});
 
 const server = new Server(config, db, router);
 
