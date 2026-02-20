@@ -1,16 +1,18 @@
+import type { UserController } from '@/controllers/user.controller';
 import { Router } from 'express';
 
 export class UserRouter {
   public readonly router = Router();
 
-  //TODO: AGREGAR EL CONTROLADOR COMO DEPENDENCIA
-  constructor() {
+  constructor(private userController: UserController) {
     this.initRoutes();
   }
 
   private initRoutes() {
-    this.router.get('/', () => {
-      console.log('hola');
-    });
+    this.router.post('/', this.userController.register);
+    this.router.get('/', this.userController.getUsers);
+    this.router.get('/:id', this.userController.getUserById);
+    this.router.patch('/:id', this.userController.updateUser);
+    this.router.delete('/:id', this.userController.deleteUser);
   }
 }

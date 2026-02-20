@@ -21,8 +21,8 @@ export class Server {
   }
 
   private setMiddlewares() {
-    this.app.use(express.json());
     this.app.use(cors());
+    this.app.use(express.json());
     this.app.use(cookieParser());
   }
 
