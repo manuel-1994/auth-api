@@ -1,60 +1,57 @@
-import type { IResponse } from '@/interfaces/IResponse';
 import type { IService } from '@/interfaces/IService';
 import { UserDTO, UserModel } from '@/models/user.model';
+import { AppError } from '@/utils/appError';
+import { HttpStatus } from '@/utils/httpStatus';
 
 export class UserService implements IService<UserDTO> {
   constructor(private model = UserModel) {}
-  public async create(data: UserDTO): Promise<IResponse<UserDTO>> {
+  public async create(data: UserDTO): Promise<UserDTO> {
     const userFound = await this.validateUser(data);
 
-    if (userFound.success) throw new Error('User Found');
+    if (userFound)
+      throw new AppError('User already exists', HttpStatus.CONFLICT);
 
     const saveData = await this.model.create(data);
-    return { success: true, message: 'User Created', data: saveData };
+    return saveData;
   }
 
-  public async get(param: UserDTO): Promise<IResponse<UserDTO>> {
+  public async get(param: UserDTO): Promise<UserDTO> {
     const userFound = await this.model.findOne(param).lean();
 
-    if (userFound) return { success: true, message: 'Ok', data: userFound };
+    if (!userFound) throw new AppError('User not found', HttpStatus.NOT_FOUND);
 
-    return { success: false, message: 'User not found' };
+    return userFound;
   }
-  public async getAll(): Promise<IResponse<UserDTO[]>> {
+
+  public async getAll(): Promise<UserDTO[]> {
     const users = await this.model.find().lean();
 
-    return { success: true, data: users };
+    return users;
   }
 
-  public async update(id: string, data: UserDTO): Promise<IResponse<UserDTO>> {
+  public async update(id: string, data: UserDTO): Promise<UserDTO> {
     const saveData = await this.model
       .findByIdAndUpdate(id, data, { new: true })
       .lean();
 
-    if (saveData) {
-      return { success: true, message: 'user updated', data: saveData };
-    }
-
-    return { success: false, message: 'user not found' };
+    if (!saveData) throw new AppError('User not found', HttpStatus.NOT_FOUND);
+    return saveData;
   }
 
-  public async delete(id: string): Promise<IResponse<any>> {
+  public async delete(id: string): Promise<void> {
     const dataDeleted = await this.model.findByIdAndDelete(id);
 
-    if (dataDeleted) return { success: true, message: 'user deleted' };
-
-    return { success: false, message: 'user not found' };
+    if (!dataDeleted)
+      throw new AppError('User not found', HttpStatus.NOT_FOUND);
   }
 
   private async validateUser(data: UserDTO) {
     const { email, username } = data;
 
-    const userFound = await this.model.findOne({
+    const user = await this.model.findOne({
       $or: [{ email }, { username }],
     });
 
-    if (userFound) return { success: true, message: 'User found' };
-
-    return { success: false };
+    return user;
   }
 }

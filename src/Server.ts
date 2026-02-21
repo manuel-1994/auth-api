@@ -5,6 +5,7 @@ import cors from 'cors';
 import type { DataBase } from './config/database';
 import type { ServerConfig } from './config/config';
 import type { MainRouter } from './routes';
+import { errorHandler } from './middlewares/errorHandler';
 
 export class Server {
   private app: Application;
@@ -18,6 +19,8 @@ export class Server {
 
     this.setMiddlewares();
     this.setRoutes();
+
+    this.app.use(errorHandler);
   }
 
   private setMiddlewares() {
