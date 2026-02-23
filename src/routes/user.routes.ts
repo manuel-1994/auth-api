@@ -1,4 +1,10 @@
 import type { UserController } from '@/controllers/user.controller';
+import {
+  updateUserSchema,
+  userIdSchema,
+  userSchema,
+  validateFields,
+} from '@/middlewares';
 import { Router } from 'express';
 
 export class UserRouter {
@@ -9,10 +15,23 @@ export class UserRouter {
   }
 
   private initRoutes() {
-    this.router.post('/', this.userController.register);
+    const validateId = [userIdSchema, validateFields];
+
+    this.router.post(
+      '/',
+      userSchema,
+      validateFields,
+      this.userController.register
+    );
     this.router.get('/', this.userController.getUsers);
-    this.router.get('/:id', this.userController.getUserById);
-    this.router.patch('/:id', this.userController.updateUser);
-    this.router.delete('/:id', this.userController.deleteUser);
+    this.router.get('/:id', ...validateId, this.userController.getUserById);
+    this.router.patch(
+      '/:id',
+      ...validateId,
+      updateUserSchema,
+      validateFields,
+      this.userController.updateUser
+    );
+    this.router.delete('/:id', ...validateId, this.userController.deleteUser);
   }
 }

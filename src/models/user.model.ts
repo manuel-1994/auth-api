@@ -1,9 +1,4 @@
-import {
-  getModelForClass,
-  modelOptions,
-  mongoose,
-  prop,
-} from '@typegoose/typegoose';
+import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 
 @modelOptions({ options: { customName: 'user' } })
 class UserDTO {

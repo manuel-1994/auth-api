@@ -5,7 +5,7 @@ import cors from 'cors';
 import type { DataBase } from './config/database';
 import type { ServerConfig } from './config/config';
 import type { MainRouter } from './routes';
-import { errorHandler } from './middlewares/errorHandler';
+import { errorHandler } from './middlewares';
 
 export class Server {
   private app: Application;
