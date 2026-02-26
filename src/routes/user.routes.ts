@@ -15,7 +15,7 @@ export class UserRouter {
   }
 
   private initRoutes() {
-    const validateId = [userIdSchema, validateFields];
+    this.router.use('/:id', userIdSchema, validateFields);
 
     this.router.post(
       '/',
@@ -24,14 +24,13 @@ export class UserRouter {
       this.userController.register
     );
     this.router.get('/', this.userController.getUsers);
-    this.router.get('/:id', ...validateId, this.userController.getUserById);
+    this.router.get('/:id', this.userController.getUserById);
     this.router.patch(
       '/:id',
-      ...validateId,
       updateUserSchema,
       validateFields,
       this.userController.updateUser
     );
-    this.router.delete('/:id', ...validateId, this.userController.deleteUser);
+    this.router.delete('/:id', this.userController.deleteUser);
   }
 }
