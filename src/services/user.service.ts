@@ -5,12 +5,13 @@ import { HttpStatus } from '@/utils/httpStatus';
 
 export class UserService implements IService<UserDTO> {
   constructor(private model = UserModel) {}
-  public async create(data: UserDTO): Promise<UserDTO> {
+
+  public async create(data: Partial<UserDTO>): Promise<UserDTO> {
     const saveData = await this.model.create(data);
     return saveData;
   }
 
-  public async get(param: UserDTO): Promise<UserDTO> {
+  public async get(param: Partial<UserDTO>): Promise<UserDTO> {
     const userFound = await this.model.findOne(param).lean();
 
     if (!userFound) throw new AppError('User not found', HttpStatus.NOT_FOUND);

@@ -2,16 +2,16 @@ import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
 
 @modelOptions({ options: { customName: 'user' } })
 class UserDTO {
-  public _id?: string;
+  public _id!: string;
 
   @prop({ required: true, unique: true })
-  public username?: string;
+  public username!: string;
 
   @prop({ required: true, unique: true })
-  public email?: string;
+  public email!: string;
 
   @prop({ required: true })
-  public password?: string;
+  public password!: string;
 }
 
 const UserModel = getModelForClass(UserDTO);

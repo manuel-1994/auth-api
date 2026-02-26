@@ -10,5 +10,6 @@ export class MainRouter {
 
   private initRoutes(deps: IRouterDependecies): void {
     this.router.use('/users', deps.userRouter.router);
+    this.router.use('/auth', deps.authRouter.router);
   }
 }

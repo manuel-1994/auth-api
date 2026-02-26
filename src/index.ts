@@ -1,21 +1,30 @@
+import { Server } from './Server';
 import { ServerConfig } from './config/config';
 import { DataBase } from './config/database';
-import { UserController } from './controllers/user.controller';
-import { MainRouter, UserRouter } from './routes';
-import { Server } from './Server';
-import { UserService } from './services/user.service';
+import { AuthRouter, MainRouter, UserRouter } from './routes';
+import { AuthService, CookieService, UserService } from './services';
+import { AuthController, UserController } from './controllers';
 
 const config = new ServerConfig();
 
 const db = new DataBase(config.db);
 
+const authService = new AuthService(config.auth);
+const cookieService = new CookieService(config.cookie);
 const userService = new UserService();
 
-const userController = new UserController(userService)
+const authController = new AuthController(
+  authService,
+  cookieService,
+  userService
+);
+const userController = new UserController(userService);
 
+const authRouter = new AuthRouter(authController);
 const userRouter = new UserRouter(userController);
 
 const router = new MainRouter({
+  authRouter,
   userRouter,
 });
 
