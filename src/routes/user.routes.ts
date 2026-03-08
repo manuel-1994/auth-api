@@ -5,6 +5,7 @@ import {
   userSchema,
   validateFields,
 } from '@/middlewares';
+import { verifyAuthToken } from '@/middlewares/verifyAuthToken';
 import { Router } from 'express';
 
 export class UserRouter {
@@ -15,6 +16,7 @@ export class UserRouter {
   }
 
   private initRoutes() {
+    this.router.use('/', verifyAuthToken);
     this.router.use('/:id', userIdSchema, validateFields);
 
     this.router.post(

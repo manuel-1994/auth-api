@@ -9,7 +9,7 @@ const config = new ServerConfig();
 
 const db = new DataBase(config.db);
 
-const authService = new AuthService(config.auth);
+const authService = new AuthService();
 const cookieService = new CookieService(config.cookie);
 const userService = new UserService();
 

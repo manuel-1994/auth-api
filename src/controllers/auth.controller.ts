@@ -1,3 +1,5 @@
+import type { IUserJWTPayload } from '@/interfaces/IUserJWTPayload';
+import type { UserDTO } from '@/models/user.model';
 import type { AuthService, CookieService, UserService } from '@/services';
 import { HttpResponse, HttpStatus } from '@/utils';
 import type { NextFunction, Request, Response } from 'express';
@@ -8,6 +10,14 @@ export class AuthController {
     readonly cookieService: CookieService,
     readonly userService: UserService
   ) {}
+
+  private setPayload(user: UserDTO): IUserJWTPayload {
+    return {
+      id: user._id,
+      email: user.email,
+      username: user.username,
+    };
+  }
 
   public register = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -21,7 +31,9 @@ export class AuthController {
         password: hashedPassword,
       });
 
-      const token = await this.authSErvice.generateToken(newUser._id);
+      const payload = this.setPayload(newUser);
+
+      const token = await this.authSErvice.generateToken(payload);
 
       this.cookieService.setAuthCookie(res, token);
 
@@ -35,11 +47,13 @@ export class AuthController {
     try {
       const { email, password } = req.body;
       const user = await this.userService.get({ email });
+      
+      const payload = this.setPayload(user);
 
       const token = await this.authSErvice.login(
         password,
         user.password,
-        user._id
+        payload
       );
 
       this.cookieService.setAuthCookie(res, token);

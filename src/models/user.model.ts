@@ -10,7 +10,7 @@ class UserDTO {
   @prop({ required: true, unique: true })
   public email!: string;
 
-  @prop({ required: true })
+  @prop({ required: true})
   public password!: string;
 }
 

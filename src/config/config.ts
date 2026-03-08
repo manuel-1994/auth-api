@@ -12,16 +12,16 @@ export class ServerConfig implements IServerConfig {
     return Number(this.getEnviroment(key));
   }
 
+  static readonly auth: IAuthConfig = {
+    jwtSecret: process.env.JWT_SECRET || 'your_jwt_secret_key',
+    saltRounds: Number(process.env.SALT_ROUNDS) || 10,
+  };
+
   public readonly port: number = this.getNumberEnviroment('PORT') || 3000;
 
   public readonly db: IDbConfig = {
     uri: this.getEnviroment('DB_URI') || 'mongodb://localhost:27017',
     name: this.getEnviroment('DB_NAME') || 'auth_api_db',
-  };
-
-  public readonly auth: IAuthConfig = {
-    jwtSecret: this.getEnviroment('JWT_SECRET') || 'your_jwt_secret_key',
-    saltRounds: this.getNumberEnviroment('SALT_ROUNDS') || 10,
   };
 
   public readonly cookie: ICookieConfig = {

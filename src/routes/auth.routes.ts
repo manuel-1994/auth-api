@@ -1,5 +1,6 @@
 import type { AuthController } from '@/controllers';
 import { userSchema, validateFields } from '@/middlewares';
+import { verifyAuthToken } from '@/middlewares/verifyAuthToken';
 import { Router } from 'express';
 
 export class AuthRouter {
@@ -18,6 +19,6 @@ export class AuthRouter {
       ...validateRegister,
       this.authController.register
     );
-    this.router.post('/logout', this.authController.logout);
+    this.router.post('/logout', verifyAuthToken, this.authController.logout);
   }
 }
